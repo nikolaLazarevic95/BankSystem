@@ -4,7 +4,6 @@ import com.kahuna.banksystem.model.Account;
 import com.kahuna.banksystem.model.Credit;
 import com.kahuna.banksystem.model.Current;
 import com.kahuna.banksystem.model.Savings;
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -28,11 +27,8 @@ public class Main {
                 case 3: applyInterest(); break;
                 case 4:  System.exit(0); break;
                 default: System.out.println("Invalid choice!"); break;
-
             }
-
         }
-
     }
 
     private void addAccount() {
@@ -40,9 +36,9 @@ public class Main {
         long number = 0;
 
         do {
-            System.out.print("Account Number");
+            System.out.print("Account Number> ");
             number = sc.nextLong();
-            validNumber = isNumberAvailable (number);
+            validNumber = isNumberAvailable(number);
             if (!validNumber) {
                 System.out.println("Sorry, number not available!");
             }
@@ -51,7 +47,6 @@ public class Main {
         System.out.print("Initial Balance> ");
         double balance = sc.nextDouble();
         sc.nextLine();
-
 
         System.out.print("Account Type [S, Cu, Cr]> ");
         String acType = sc.nextLine().toLowerCase();
@@ -62,9 +57,7 @@ public class Main {
             case "cr":
                 System.out.print("Credit Limit> ");
                 double limit = sc.nextDouble();
-                accounts.add(new Credit(number, balance, limit));
-                break;
-
+                accounts.add(new Credit(number, balance, limit)); break;
         }
     }
 
@@ -74,7 +67,6 @@ public class Main {
                 return false;
             }
         }
-
         return true;
     }
 
@@ -89,15 +81,15 @@ public class Main {
                 accType = "Cr";
             }
 
-            System.out.println(accNo + "\t\t\t" + a.getNumber() + "\t\t\t" + a.getBalance() + "\t\t\t" + accType);
+            System.out.println(accNo + "\t\t\t" + a.getNumber() + "\t\t\t" + a.getBalance() + "\t\t" + accType);
             accNo++;
         }
+
         sc.nextLine();
         System.out.println("[c]ontinue, [e]dit");
         String choice = sc.nextLine();
         if (choice.equalsIgnoreCase("e")) {
             editAccount();
-
         }
     }
 
@@ -123,8 +115,8 @@ public class Main {
         System.out.println("Withdrawal: ");
         System.out.println("Current Balance: " + accounts.get(series).getBalance());
         System.out.print("Amount> ");
-        double amnount = sc.nextDouble();
-        accounts.get(series).withdraw(amnount);
+        double amount = sc.nextDouble();
+        accounts.get(series).withdraw(amount);
     }
 
 
@@ -137,10 +129,14 @@ public class Main {
     }
 
     private void applyInterest() {
-
-
+        for (Account a : accounts) {
+            if (!(a instanceof Credit)) {
+                double oldBalance = a.getBalance();
+                a.applyInterest();
+                System.out.println("Applied interest to " + a.getNumber() + ". Old: € " + oldBalance + "--- New: € " + a.getBalance());
+            }
+        }
     }
-
 
     public static void main(String[] args) {
         Main m  = new Main();
